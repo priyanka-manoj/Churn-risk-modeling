@@ -13,3 +13,6 @@ __pycache__/
 
 # Local secrets
 .env
+
+# Ignore catboost info directory
+catboost_info/
