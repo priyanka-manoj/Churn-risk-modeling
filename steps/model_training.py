@@ -18,7 +18,7 @@ def build_lr_pipeline(
     num_features,
     cat_features,
     C=1.0,
-    penalty="l2",
+    l1_ratio=0.0,
     class_weight=None,
     solver="lbfgs"
 ):
@@ -29,29 +29,14 @@ def build_lr_pipeline(
         ("preprocessor", build_lr_preprocessor(num_features, cat_features)),
         ("model", LogisticRegression(
             C=C,
-            penalty=penalty,
+            l1_ratio=l1_ratio,
             class_weight=class_weight,
             solver=solver,
             max_iter=3000,
             random_state=42
         ))
     ])
-def build_lr_feature_pipeline(num_features, cat_features, class_weight=None):
 
-    engineered_num_features = num_features + [
-        "tenure_squared",
-        "tenure_x_monthly"
-    ]
-
-    return Pipeline([
-        ("cleaner", TotalChargesCleaner()),
-        ("features", ChurnFeatureEngineer()),
-        ("preprocessor", build_lr_preprocessor(
-            engineered_num_features, cat_features
-        )),
-        ("model", LogisticRegression(max_iter=3000, random_state=42, class_weight=class_weight))
-        
-    ])
 # Random Forest
 def build_rf_pipeline(num_features, cat_features, class_weight = None):
 
