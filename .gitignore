@@ -16,3 +16,5 @@ __pycache__/
 
 # Ignore catboost info directory
 catboost_info/
+
+.pytest_cache/
