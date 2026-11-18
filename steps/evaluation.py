@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -101,3 +102,53 @@ def plot_confusion_matrix(model, X, y, labels=("Stay", "Churn")):
     plt.title("Confusion Matrix")
     plt.tight_layout()
     plt.show()
+
+
+def calculate_ece(y_true, y_prob, n_bins=10):
+    """
+    Calculate the Expected Calibration Error (ECE) for a binary classifier.
+
+    Parameters:
+    - y_true: array-like of shape (n_samples,), true binary labels (0 or 1).
+    - y_prob: array-like of shape (n_samples,), predicted probabilities for the positive class.
+    - n_bins: int, number of bins to use for calibration.
+
+    Returns:
+    - ece: float, the expected calibration error.
+    """
+    df = pd.DataFrame({
+        "y_true": np.array(y_true),
+        "y_prob": np.array(y_prob)
+    })
+
+    # Create bins
+    bins = np.linspace(0, 1, n_bins + 1)
+
+    df["bin"] = pd.cut(
+        df["y_prob"],
+        bins=bins,
+        include_lowest=True
+    )
+
+    summary = (
+        df.groupby("bin", observed=True)
+        .agg(
+            customers=("y_true", "size"),
+            observed_rate=("y_true", "mean"),
+            mean_probability=("y_prob", "mean")
+        )
+    )
+
+    summary["calibration_gap"] = abs(
+        summary["observed_rate"] - summary["mean_probability"]
+    )
+
+    ece = (
+        summary["customers"] / len(df)
+        * summary["calibration_gap"]
+    ).sum()
+
+    return ece, summary
+        
+
+        
