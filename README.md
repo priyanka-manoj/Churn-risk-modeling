@@ -350,3 +350,11 @@ The final calibrated Logistic Regression achieved a test ROC-AUC of **0.846** an
 More importantly, the resulting risk segmentation identified approximately **53.4% of observed churners within 21.5% of test customers**, offering a practical foundation for capacity-aware retention prioritization.
 
 The project illustrates how machine learning predictions can support business decisions while clearly distinguishing predictive risk from the effectiveness of potential interventions.
+
+### Development Tools
+
+- **IDE:** Visual Studio Code
+- **Language:** Python 3.13
+- **ML Framework:** scikit-learn
+- **Testing:** pytest
+- **Version Control:** Git and GitHub
